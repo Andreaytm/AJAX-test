@@ -1,5 +1,6 @@
 function getData(url, cb){
     var xhr = new XMLHttpRequest();
+    
     xhr.open("GET", url);
     xhr.send();
     
@@ -21,16 +22,14 @@ function getTableHeaders(obj) {
 }
 
 function generatePaginationButtons(next, prev){
-    if (next && prev) {
+   if (next && prev) {
         return `<button onclick="writeToDocument('${prev}')">Previous</button>
                 <button onclick="writeToDocument('${next}')">Next</button>`;
     }else if(next && !prev) {
         return `<button onclick="writeToDocument('${next}')">Next</button>`;
     }else if(prev && !next) {
         return `<button onclick="writeToDocument('${prev}')">Previous</button>`;
-    }else if(!next && !prev) {
-        return `null`;
-    } 
+    }
 }
 
 function writeToDocument(url) {
@@ -38,11 +37,14 @@ function writeToDocument(url) {
     var el = document.getElementById("data"); /*var el here fixes appended results*/
 
     getData(url, function(data) {
-        var pagination 
+        var pagination; 
         
         if (data.next || data.previous){
-            pagination = generatePaginationButtons(data.next, data.previous)
+            pagination = generatePaginationButtons(data.next, data.previous);
+        }else{
+            pagination = "";
         }
+        
         data = data.results;
         var tableHeaders = getTableHeaders(data[0]);
         
@@ -51,7 +53,7 @@ function writeToDocument(url) {
             
             Object.keys(item).forEach(function(key){
                 var rowData =item[key].toString();
-                var truncatedData = rowData.substring(0,15)
+                var truncatedData = rowData.substring(0, 15);
                 dataRow.push(`<td>${truncatedData}</td>`);
             });
             tableRows.push(`<tr>${dataRow}</tr>`);
